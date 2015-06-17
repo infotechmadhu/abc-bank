@@ -6,8 +6,10 @@ import java.util.List;
 
 public abstract class Account {
 
-    public List<Transaction> transactions;
-    public static final String ERR_AMOUNT_LESS_THAN_ZERO = "Amount must be greater than zero";
+    private List<Transaction> transactions;
+  
+
+	public static final String ERR_AMOUNT_LESS_THAN_ZERO = "Amount must be greater than zero";
     private boolean isDeposit;//flag to set the transaction
    
 	public Account() {
@@ -76,6 +78,14 @@ public abstract class Account {
 	public void setDeposit(boolean isDeposit) {
 		this.isDeposit = isDeposit;
 	}
+	
+	public List<Transaction> getTransactions() {
+			return transactions;
+	   }
+
+	public void setTransactions(List<Transaction> transactions) {
+			this.transactions = transactions;
+		}
     
 
 
