@@ -14,11 +14,19 @@ public class Transaction {
         this.amount = amount;
         this.transactionDate = DateProvider.getInstance().now();
     }
-    
+   
+     /**
+     * Get transaction date
+     * @return date
+     */
     public Date getTransactionDate() {
 		return transactionDate;
 	}
-
+    
+    /**
+     * Get transaction amount
+     * @return amount
+     */
 	public BigDecimal getAmount() {
 		return amount;
 	}
