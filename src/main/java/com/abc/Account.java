@@ -1,73 +1,83 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Account {
+public abstract class Account {
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
-
-    private final int accountType;
     public List<Transaction> transactions;
-
-    public Account(int accountType) {
-        this.accountType = accountType;
+    public static final String ERR_AMOUNT_LESS_THAN_ZERO = "Amount must be greater than zero";
+    private boolean isDeposit;//flag to set the transaction
+   
+	public Account() {
         this.transactions = new ArrayList<Transaction>();
     }
-
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
+     
+	/**
+	 * Adds a transaction for deposit
+	 * @param amount the amount to be deposited
+	 */
+    public void deposit(BigDecimal amount) {
+    	if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException(ERR_AMOUNT_LESS_THAN_ZERO);
         } else {
+        	this.setDeposit(true);
             transactions.add(new Transaction(amount));
         }
     }
-
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
+    
+  /**
+   * Adds a transaction for withdrawl
+   * @param amount the amount to withdraw
+   */
+   public void withdraw(BigDecimal amount) {
+	   if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+        throw new IllegalArgumentException(ERR_AMOUNT_LESS_THAN_ZERO);
     } else {
-        transactions.add(new Transaction(-amount));
+    	this.setDeposit(false);
+        transactions.add(new Transaction(amount.negate()));
     }
-}
-
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
-        }
-    }
-
-    public double sumTransactions() {
+  }
+   
+ 
+   public abstract BigDecimal interestEarned();
+    
+   /**
+    * Checks if the transaction exists.
+    * @return amount.
+    */
+    public BigDecimal sumTransactions() {
        return checkIfTransactionsExist(true);
     }
 
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
+    private BigDecimal checkIfTransactionsExist(boolean checkAll) {
+        BigDecimal amount = BigDecimal.ZERO;
+        for (Transaction transaction: transactions)
+        	amount = amount.add(transaction.amount);
         return amount;
     }
+    
+    public abstract String getAccountType();
+    
+    
+    /**
+     * Get the transaction flag
+     * @return isDeposit flag 
+     */
+	public boolean isDeposit() {
+		return isDeposit;
+	}
 
-    public int getAccountType() {
-        return accountType;
-    }
+	/**
+	 * Set the transaction flag
+	 * @param isDeposit
+	 */
+	public void setDeposit(boolean isDeposit) {
+		this.isDeposit = isDeposit;
+	}
+    
 
+
+  
 }
