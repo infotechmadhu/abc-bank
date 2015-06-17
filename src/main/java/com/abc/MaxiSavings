@@ -37,7 +37,7 @@ public class MaxiSavings extends Account {
 		Calendar cal = Calendar.getInstance();
 		cal.add( Calendar.DAY_OF_YEAR, -10);
 		Date tenDaysAgo = cal.getTime();
-		for(Transaction transaction: transactions){
+		for(Transaction transaction: getTransactions()){
 			if(transaction.getTransactionDate().after(tenDaysAgo)){
 				if(!this.isDeposit()) {
 					return true;
