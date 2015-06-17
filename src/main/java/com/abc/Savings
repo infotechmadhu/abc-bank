@@ -6,7 +6,7 @@ public class Savings extends Account {
 	public static final BigDecimal FLAT_RATE = new BigDecimal(0.001); 
     public static final BigDecimal SAVINGS_INTEREST_RATE = new BigDecimal(0.002); 
     public static final BigDecimal VAL_SAVINGS=new BigDecimal(1000);
-    public static final String ACCOUNT_NAME="Savings Account\n";
+    public static final String ACCOUNT_TYPE="Savings Account\n";
 	
 	public Savings(){
 		
@@ -24,7 +24,7 @@ public class Savings extends Account {
 
 	@Override
 	public String getAccountType() {
-		return this.ACCOUNT_NAME;
+		return this.ACCOUNT_TYPE;
 	}
 }
 
