@@ -1,0 +1,30 @@
+package com.abc;
+
+import java.math.BigDecimal;
+
+public class Savings extends Account {
+	public static final BigDecimal FLAT_RATE = new BigDecimal(0.001); 
+    public static final BigDecimal SAVINGS_INTEREST_RATE = new BigDecimal(0.002); 
+    public static final BigDecimal VAL_SAVINGS=new BigDecimal(1000);
+    public static final String ACCOUNT_NAME="Savings Account\n";
+	
+	public Savings(){
+		
+	}
+
+	@Override
+	public BigDecimal interestEarned() {
+		BigDecimal amount= sumTransactions();
+		if(amount.compareTo(VAL_SAVINGS)<=0){
+			return amount.multiply(FLAT_RATE);
+		}
+		
+		return (amount.subtract(this.VAL_SAVINGS).multiply(this.SAVINGS_INTEREST_RATE)).add(new BigDecimal(1));
+	}
+
+	@Override
+	public String getAccountType() {
+		return this.ACCOUNT_NAME;
+	}
+}
+
