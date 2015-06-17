@@ -1,9 +1,8 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Math.abs;
 
 public class Customer {
     private String name;
@@ -17,7 +16,7 @@ public class Customer {
     public String getName() {
         return name;
     }
-
+   
     public Customer openAccount(Account account) {
         accounts.add(account);
         return this;
@@ -27,52 +26,67 @@ public class Customer {
         return accounts.size();
     }
 
-    public double totalInterestEarned() {
-        double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
+    public BigDecimal totalInterestEarned() {
+    	BigDecimal total = BigDecimal.ZERO;
+        for (Account account : accounts)
+        	total=total.add(account.interestEarned());
         return total;
     }
-
+     
+    /**
+     * Generates transaction statement for a customer
+     * @return statement string
+     */
     public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
-        double total = 0.0;
-        for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
-        }
-        statement += "\nTotal In All Accounts " + toDollars(total);
-        return statement;
+    	 StringBuffer statement = new StringBuffer();
+         statement.append("Statement for ").append(name).append("\n");
+         BigDecimal total = BigDecimal.ZERO;
+         for (Account account : accounts) {
+             statement.append("\n").append(statementForAccount(account)).append("\n");
+             total = total.add(account.sumTransactions());
+         }
+         statement.append("\nTotal In All Accounts ").append(toDollars(total));
+         return statement.toString();
     }
 
-    private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
-
+    private String statementForAccount(Account account) {
+    	StringBuffer s = new StringBuffer("");
+    	s.append(account.getAccountType());
+    	
         //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
+        BigDecimal total = BigDecimal.ZERO;
+  
+        for (Transaction transaction : account.transactions) {
+        	  s.append("  ").append(transaction.amount.compareTo(BigDecimal.ZERO) < 0?"withdrawal" : "deposit");
+              s.append(" ").append(toDollars(transaction.amount)).append("\n");
+              total=total.add(transaction.amount);
         }
-        s += "Total " + toDollars(total);
-        return s;
+       // s += "Total " + toDollars(total);
+        s.append("Total ").append(toDollars(total));
+        return s.toString();
     }
 
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
+    private String toDollars(BigDecimal d){
+        return String.format("$%,.2f", d.abs());
+    }
+    
+    /**
+     * Transfer the amount from one account to another
+     * @param amount amount to be transferred
+     * @param fromAccount the account to withdraw the amount
+     * @param toAccount the account to deposit the amount
+     */
+    public void transferBetweenAccounts(BigDecimal amount,Account fromAccount,Account toAccount){
+    	if (amount.compareTo(BigDecimal.ZERO) <= 0){
+    		throw new IllegalArgumentException(Account.ERR_AMOUNT_LESS_THAN_ZERO);
+    	}
+    	if(fromAccount!=null && toAccount!=null){
+    		fromAccount.withdraw(amount);
+        	toAccount.deposit(amount);
+    	}else{
+    		throw new NullPointerException("Account doesnot exists");
+    	}
+    	
+    	
     }
 }
