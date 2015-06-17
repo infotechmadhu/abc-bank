@@ -1,0 +1,45 @@
+/**
+ * 
+ */
+package com.abc;
+
+import static org.junit.Assert.*;
+
+
+import java.math.BigDecimal;
+
+import org.junit.Test;
+
+public class AccountTest {
+
+	private static final double DOUBLE_DELTA = 1e-15;
+
+	@Test
+    public void testDeposit() {
+		Account account = new Savings();
+		account.deposit(new BigDecimal(200.00));
+        
+		assertEquals(200.00, account.getTransactions().get(0).getAmount().doubleValue(), DOUBLE_DELTA);
+    }
+	
+	@Test
+    public void testWithdrawal() {
+		Account account = new Checkings();
+		account.deposit(new BigDecimal(1000.00));
+		account.withdraw(new BigDecimal(200.00));
+        
+		assertEquals(-200.00, account.getTransactions().get(1).getAmount().doubleValue(), DOUBLE_DELTA);
+    }
+	
+	@Test
+    public void testSumOfTransactions() {
+		Account account =new Checkings();
+		account.deposit(new BigDecimal(1000.00));
+		account.withdraw(new BigDecimal(200.00));
+		account.deposit(new BigDecimal(1000.00));
+		account.withdraw(new BigDecimal(300.00));
+        
+		assertEquals(1500.00, account.sumTransactions().doubleValue(), DOUBLE_DELTA);
+    }
+
+}
