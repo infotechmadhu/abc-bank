@@ -1,1 +1,26 @@
 
+package com.abc;
+
+import java.math.BigDecimal;
+
+public class Checkings extends Account {
+	public static final BigDecimal FLAT_RATE = new BigDecimal(0.001); 
+	public static final String ACCOUNT_NAME="Checking Account\n";
+	
+	public Checkings(){
+	}
+   
+	@Override
+	public BigDecimal interestEarned() {
+		BigDecimal amount= sumTransactions();
+		return amount.multiply(FLAT_RATE);
+	}
+
+	@Override
+	public String getAccountType() {
+		// TODO Auto-generated method stub
+		return ACCOUNT_NAME;
+		
+	}
+
+}
