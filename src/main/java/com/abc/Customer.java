@@ -56,7 +56,7 @@ public class Customer {
         //Now total up all the transactions
         BigDecimal total = BigDecimal.ZERO;
   
-        for (Transaction transaction : account.transactions) {
+        for (Transaction transaction : account.getTransactions()) {
         	  s.append("  ").append(transaction.amount.compareTo(BigDecimal.ZERO) < 0?"withdrawal" : "deposit");
               s.append(" ").append(toDollars(transaction.amount)).append("\n");
               total=total.add(transaction.amount);
